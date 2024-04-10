@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   resources :articles
+  resources :friends_articles
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -11,5 +12,5 @@ Rails.application.routes.draw do
   # root "posts#index"
   root to: "home#index"
   put 'like', to: "articles#like"
-  get 'total_like', to: "articles#total_like"
+  delete 'deslike', to: "articles#deslike"
 end

@@ -1,9 +1,9 @@
 class ArticlesController < ApplicationController
-  before_action :set_article, only: %i[ show edit update destroy total_like ]
+  before_action :set_article, only: %i[ show edit update destroy ]
 
   # GET /articles or /articles.json
   def index
-    @articles = Article.all
+    @articles = Article.all.where(user_id: current_user.id)
   end
 
   # GET /articles/1 or /articles/1.json
@@ -60,12 +60,19 @@ class ArticlesController < ApplicationController
   def like
     @article = Article.find(params[:article_id])
     Like.create(user_id: current_user.id, article_id: @article.id)
+    @total_likes = Like.where(article_id: @article.id).count
   end
 
-  def total_like
+  def deslike
     @article = Article.find(params[:article_id])
-    @total_like = Like.where(article_id: @article.id).count
+    @like = @article.likes.where(user_id: current_user.id).first
+    @like.destroy!
   end
+
+  # def total_like
+  #   @article = Article.find(params[:article_id])
+  #   @total_like = Like.where(article_id: @article.id).count
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
