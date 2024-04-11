@@ -1,25 +1,29 @@
+<%= turbo_frame_tag 'show_article' do %>
 <div id="<%= dom_id article %>">
   <p class="my-5">
     <strong class="block font-medium mb-1">Title:</strong>
-    <%= article.title %>
+    <%= action_name == 'show' ? article.title : article.title.truncate(5) %>
   </p>
 
   <p class="my-5">
     <strong class="block font-medium mb-1">Content:</strong>
-    <%= article.content %>
+    <%= action_name == 'show' ? article.content : article.content.truncate(5) %>
   </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Author:</strong>
+    <%= action_name == 'show' ? article.user.email : article.user.email.truncate(5) %>
+  </p>
+</div>
 
   <% if action_name != "show" && current_user.articles.include?(article) %>
     <%= link_to "Show this article", article, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Edit this article", edit_article_path(article), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+    <div id="edit_article">
+      <%= link_to "Edit this article", edit_article_path(article), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+    </div>
     <hr class="mt-6">
   <% end %>
   <% unless current_user.articles.include?(article) %>
-    <% unless article.likes.where(user_id: current_user.id).any? %>
-      <%= link_to "Like", like_path(article_id: article.id), data: { turbo_method: :put }, class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
-    <% else %>
-      <%= link_to "Deslike", deslike_path(article_id: article.id), data: { turbo_method: :delete }, class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
-    <% end %>
-    <%= article.likes.count %>
+    <%= render "articles/likes", article: article %>
   <% end %>
-</div>
+<% end %>

@@ -38,6 +38,7 @@ class ArticlesController < ApplicationController
   def update
     respond_to do |format|
       if @article.update(article_params)
+        format.turbo_stream
         format.html { redirect_to article_url(@article), notice: "Article was successfully updated." }
         format.json { render :show, status: :ok, location: @article }
       else
@@ -61,12 +62,18 @@ class ArticlesController < ApplicationController
     @article = Article.find(params[:article_id])
     Like.create(user_id: current_user.id, article_id: @article.id)
     @total_likes = Like.where(article_id: @article.id).count
+    respond_to do |format|
+      format.turbo_stream
+    end
   end
 
   def deslike
     @article = Article.find(params[:article_id])
     @like = @article.likes.where(user_id: current_user.id).first
     @like.destroy!
+    respond_to do |format|
+      format.turbo_stream
+    end
   end
 
   # def total_like

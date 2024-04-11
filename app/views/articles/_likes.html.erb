@@ -1,0 +1,8 @@
+<div id="<%= dom_id article %>_likes">
+  <% unless article.likes.where(user_id: current_user.id).any? %>
+    <%= link_to "🖤", like_path(article_id: article.id), data: { turbo_method: :put }, class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+  <% else %>
+    <%= link_to "💔", deslike_path(article_id: article.id), data: { turbo_method: :delete }, class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+  <% end %>
+  <%= article.likes.count %>
+</div>
