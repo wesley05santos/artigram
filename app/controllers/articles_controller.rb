@@ -25,6 +25,7 @@ class ArticlesController < ApplicationController
 
     respond_to do |format|
       if @article.save
+        format.turbo_stream
         format.html { redirect_to article_url(@article), notice: "Article was successfully created." }
         format.json { render :show, status: :created, location: @article }
       else
@@ -53,6 +54,7 @@ class ArticlesController < ApplicationController
     @article.destroy!
 
     respond_to do |format|
+      format.turbo_stream
       format.html { redirect_to articles_url, notice: "Article was successfully destroyed." }
       format.json { head :no_content }
     end
@@ -75,11 +77,6 @@ class ArticlesController < ApplicationController
       format.turbo_stream
     end
   end
-
-  # def total_like
-  #   @article = Article.find(params[:article_id])
-  #   @total_like = Like.where(article_id: @article.id).count
-  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
